@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Http\Requests;
 
 use App\User;
 use Illuminate\Http\Request;
@@ -13,6 +14,10 @@ class UserController extends Controller
       return view('dashboard');
 
     }
+    public function __construct()
+      {
+          $this->middleware('auth');
+      }
 
      public function postSignUp(Request $request)
      {
@@ -36,6 +41,11 @@ class UserController extends Controller
      }
      public function postSignIn(Request $request)
      {
+       $this->validate($request,[
+          'email' => 'required',
+          'password'=> 'required'
+        ]);
+
         if(Auth::attempt(['email'=>$request['email'],'password'=>$request['password']])){
           return redirect()->route('dashboard');
           }
